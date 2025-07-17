@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 인증정보(Payload)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: sans-serif;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 3rem auto;
+            padding: 2rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #ccc;
+        }
+
+        td:first-child {
+            font-weight: bold;
+            width: 30%;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.4rem;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+<div class="container">
+    <h1>내 인증정보 (Payload)</h1>
+    <table>
+        <tr><td>E-mail</td><td><input type="text" id="email" /></td></tr>
+        <tr><td>이름</td><td><input type="text" id="member_name" /></td></tr>
+        <tr><td>별칭</td><td><input type="text" id="nickname" /></td></tr>
+        <tr><td>회원 인증 여부</td><td><input type="text" id="member_verified" /></td></tr>
+        <tr><td>Sub</td><td><input type="text" id="sub" /></td></tr>
+    </table>
+</div>
+
+<script>
+    const keycloakConfig = {
+        userEndpoint: 'https://dev-auth.nwcgm.com/realms/nwc/protocol/openid-connect/userinfo',
+        redirectLoginUri: 'https://www.kingkongapps.kr:39090/test/login',
+    };
+
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let c of cookies) {
+            const [key, val] = c.trim().split('=');
+            if (key === name) return decodeURIComponent(val);
+        }
+        return null;
+    }
+
+    async function loadUserInfo() {
+        const accessToken = getCookie('access_token');
+        if (!accessToken) {
+            Swal.fire({ title: '오류', text: '인증정보가 없습니다. 로그인을 진행해 주세요.', timer: 2000, timerProgressBar: true})
+                .then( () => {
+                    window.location.href = keycloakConfig.redirectLoginUri;
+                });
+            return;
+        }
+
+        try {
+            const response = await fetch(keycloakConfig.userEndpoint, {
+                headers: {
+                    Authorization: 'Bearer ' + accessToken
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Keycloak Userinfo 정보 요청 실패');
+            }
+
+            const data = await response.json();
+            console.log('User Info:', data);
+
+            // 사용자 정보 맵핑
+            document.getElementById('email').value = data.email || '';
+            document.getElementById('member_name').value = data.member_name || '';
+            document.getElementById('nickname').value = data.nickname || '';
+            document.getElementById('member_verified').value = data.member_verified ? 'Y' : 'N';
+            document.getElementById('sub').value = data.sub || '';
+        } catch (error) {
+            console.error('사용자 정보 로딩 오류:', error);
+            alert('Keycloak Userinfo를 불러오는 중 오류가 발생했습니다.');
+        }
+    }
+
+    loadUserInfo();
+</script>
+</body>
+</html>
