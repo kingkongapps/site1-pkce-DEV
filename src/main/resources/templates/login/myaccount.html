@@ -101,7 +101,7 @@
             document.getElementById('email').value = data.email || '';
             document.getElementById('member_name').value = data.member_name || '';
             document.getElementById('nickname').value = data.nickname || '';
-            document.getElementById('member_verified').value = data.member_verified ? 'Y' : 'N';
+            document.getElementById('member_verified').value = data.member_verified || '';
             document.getElementById('sub').value = data.sub || '';
         } catch (error) {
             console.error('사용자 정보 로딩 오류:', error);
