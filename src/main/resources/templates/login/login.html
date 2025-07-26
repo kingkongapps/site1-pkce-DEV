@@ -59,9 +59,9 @@ Login...<BR>
       authEndpoint: 'https://dev-auth.nwcgm.com/realms/nwc/protocol/openid-connect/auth',
       tokenEndpoint: 'https://dev-auth.nwcgm.com/realms/nwc/protocol/openid-connect/token',
 
-      clientId: 'wmd-client',
-      redirectUri: 'https://www.kingkongapps.kr:39090/test/login',
-      redirectHomeUri: 'https://www.kingkongapps.kr:39090/test',
+      clientId: 'wmd-front',
+      redirectUri: 'https://www.kingkongapps.kr:39091/test/login',
+      redirectHomeUri: 'https://www.kingkongapps.kr:39091/test',
     };
 
     async function buildAuthUrl() {
@@ -181,7 +181,7 @@ Login...<BR>
 
         // 회원가입여부 - 미가입시 IAM 회원가입페이지로 이동
         if( ! payload.member_verified ) {
-            Swal.fire({ title: '[ 알림 ]', html: 'member_verified is false.<BR>회원가입을 진행해 주세요.', timer: 2000, timerProgressBar: true})
+            Swal.fire({ title: '[ 알림 ]', html: 'E-mail:' + payload.email + '<BR>member_verified is false.<BR>회원가입을 진행해 주세요.', timer: 2000, timerProgressBar: true})
                 .then( () => {
                     redirectToJoin();
                 });

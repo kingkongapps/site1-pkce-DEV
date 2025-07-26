@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example.keycloak</groupId>
-	<artifactId>site1-pkce</artifactId>
+	<artifactId>site1-pkce-DEV</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>site1-pkce</name>
 	<description>Demo project for Spring Boot</description>

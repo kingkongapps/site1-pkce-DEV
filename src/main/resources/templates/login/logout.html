@@ -42,8 +42,8 @@
     const keycloakConfig = {
       logoutEndpoint: 'https://dev-auth.nwcgm.com/realms/nwc/protocol/openid-connect/logout',
 
-      clientId: 'wmd-client',
-      redirectUri: 'https://www.kingkongapps.kr:39090/test'
+      clientId: 'wmd-front',
+      redirectUri: 'https://www.kingkongapps.kr:39091/test'
     };
 
     // 쿠키 읽기
@@ -73,7 +73,7 @@
 
     async function logoutKeycloak() {
         const id_token = getCookie('id_token'); // 쿠키 이름에 맞게 수정
-//      alert('id_token=' + id_token);
+        alert('id_token=' + id_token);
 
         await sleep(1000); // 1초 대기
 
@@ -81,6 +81,7 @@
         deleteCookie('access_token');
         deleteCookie('refresh_token');
         deleteCookie('id_token');
+        deleteCookie('JSESSIONID');
 
         if( id_token ) {
             const logoutUrl = await buildLogoutUrl(id_token);
